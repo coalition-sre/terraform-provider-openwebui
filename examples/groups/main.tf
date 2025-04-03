@@ -21,16 +21,16 @@ resource "openwebui_group" "administrators" {
 
   permissions = {
     workspace = {
-      models    = true    # Can manage all models
-      knowledge = true    # Can manage all knowledge bases
-      prompts   = true    # Can manage prompts
-      tools     = true    # Can manage tools
+      models    = true # Can manage all models
+      knowledge = true # Can manage all knowledge bases
+      prompts   = true # Can manage prompts
+      tools     = true # Can manage tools
     }
     chat = {
-      file_upload = true  # Can upload files
-      delete      = true  # Can delete messages
-      edit        = true  # Can edit messages
-      temporary   = true  # Can use temporary chats
+      file_upload = true # Can upload files
+      delete      = true # Can delete messages
+      edit        = true # Can edit messages
+      temporary   = true # Can use temporary chats
     }
   }
 }
@@ -43,10 +43,10 @@ resource "openwebui_group" "viewers" {
 
   permissions = {
     workspace = {
-      models    = false   # Cannot manage models
-      knowledge = false   # Cannot manage knowledge bases
-      prompts   = false   # Cannot manage prompts
-      tools     = false   # Cannot manage tools
+      models    = false # Cannot manage models
+      knowledge = false # Cannot manage knowledge bases
+      prompts   = false # Cannot manage prompts
+      tools     = false # Cannot manage tools
     }
     chat = {
       file_upload = false # Cannot upload files
@@ -65,16 +65,16 @@ resource "openwebui_group" "model_developers" {
 
   permissions = {
     workspace = {
-      models    = true    # Can manage models
-      knowledge = true    # Can manage knowledge bases
-      prompts   = true    # Can manage prompts
-      tools     = false   # Cannot manage tools
+      models    = true  # Can manage models
+      knowledge = true  # Can manage knowledge bases
+      prompts   = true  # Can manage prompts
+      tools     = false # Cannot manage tools
     }
     chat = {
-      file_upload = true  # Can upload files
-      delete      = true  # Can delete messages
-      edit        = true  # Can edit messages
-      temporary   = true  # Can use temporary chats
+      file_upload = true # Can upload files
+      delete      = true # Can delete messages
+      edit        = true # Can edit messages
+      temporary   = true # Can use temporary chats
     }
   }
 }
@@ -87,10 +87,10 @@ resource "openwebui_group" "content_managers" {
 
   permissions = {
     workspace = {
-      models    = false   # Cannot manage models
-      knowledge = true    # Can manage knowledge bases
-      prompts   = true    # Can manage prompts
-      tools     = false   # Cannot manage tools
+      models    = false # Cannot manage models
+      knowledge = true  # Can manage knowledge bases
+      prompts   = true  # Can manage prompts
+      tools     = false # Cannot manage tools
     }
     chat = {
       file_upload = true  # Can upload files
@@ -161,7 +161,7 @@ data "openwebui_group" "existing_devs" {
 output "group_ids" {
   value = {
     administrators   = openwebui_group.administrators.id
-    viewers         = openwebui_group.viewers.id
+    viewers          = openwebui_group.viewers.id
     model_developers = openwebui_group.model_developers.id
     content_managers = openwebui_group.content_managers.id
   }

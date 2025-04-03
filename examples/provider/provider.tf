@@ -1,3 +1,5 @@
+# Copyright (c) HashiCorp, Inc.
+
 terraform {
   required_providers {
     openwebui = {
@@ -13,7 +15,7 @@ terraform {
 #    - OPENWEBUI_ENDPOINT
 #    - OPENWEBUI_TOKEN
 provider "openwebui" {
-  endpoint = "http://localhost:8080"  # Optional: can be set via OPENWEBUI_ENDPOINT
+  endpoint = "http://localhost:8080" # Optional: can be set via OPENWEBUI_ENDPOINT
   # token = "your-api-token"         # Optional: can be set via OPENWEBUI_TOKEN
 }
 
@@ -46,10 +48,10 @@ resource "openwebui_model" "gpt4_custom" {
   is_active     = true
 
   params {
-    system          = "You are a helpful data science assistant"
-    temperature     = 0.7
-    top_p           = 0.9
-    max_tokens      = 2000
+    system      = "You are a helpful data science assistant"
+    temperature = 0.7
+    top_p       = 0.9
+    max_tokens  = 2000
   }
 
   meta {
@@ -76,23 +78,23 @@ resource "openwebui_model" "gpt4_custom" {
 resource "openwebui_knowledge" "documentation" {
   name        = "Data Science Documentation"
   description = "Knowledge base for data science best practices"
-  
+
   data = {
     department = "Data Science"
     category   = "Documentation"
     version    = "1.0"
   }
 
-  access_control = "private"  # Make it private by default
+  access_control = "private" # Make it private by default
 }
 
 # Use data sources to query existing resources
 data "openwebui_group" "existing_admin" {
-  name = "administrators"  # Look up existing admin group
+  name = "administrators" # Look up existing admin group
 }
 
 data "openwebui_model" "base_model" {
-  name = "GPT-4"  # Look up existing model
+  name = "GPT-4" # Look up existing model
 }
 
 # Output some useful information

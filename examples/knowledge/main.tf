@@ -17,11 +17,11 @@ provider "openwebui" {
 resource "openwebui_group" "developers" {
   name        = "developers"
   description = "Development team with access to technical documentation"
-  
+
   permissions = {
     workspace = {
       models    = false
-      knowledge = true  # Can access knowledge bases
+      knowledge = true # Can access knowledge bases
       prompts   = true
       tools     = false
     }
@@ -37,7 +37,7 @@ resource "openwebui_group" "developers" {
 resource "openwebui_group" "researchers" {
   name        = "researchers"
   description = "Research team with access to research documentation"
-  
+
   permissions = {
     workspace = {
       models    = true
@@ -58,16 +58,16 @@ resource "openwebui_group" "researchers" {
 resource "openwebui_knowledge" "tech_docs" {
   name           = "Technical Documentation"
   description    = "Comprehensive technical documentation for our systems"
-  access_control = "private"  # Restricted access
+  access_control = "private" # Restricted access
 
   data = {
-    category     = "technical"
-    department   = "engineering"
-    version      = "1.0"
-    last_review  = "2024-01-01"
-    maintainer   = "devops-team"
-    format       = "markdown"
-    source_repo  = "github.com/company/tech-docs"
+    category    = "technical"
+    department  = "engineering"
+    version     = "1.0"
+    last_review = "2024-01-01"
+    maintainer  = "devops-team"
+    format      = "markdown"
+    source_repo = "github.com/company/tech-docs"
   }
 
   # Associated with a model for better context
@@ -81,12 +81,12 @@ resource "openwebui_knowledge" "research_papers" {
   access_control = "private"
 
   data = {
-    category     = "research"
-    department   = "r&d"
-    type         = "academic"
-    field        = "machine-learning"
-    curator      = "research-lead"
-    updated      = "2024-02-01"
+    category        = "research"
+    department      = "r&d"
+    type            = "academic"
+    field           = "machine-learning"
+    curator         = "research-lead"
+    updated         = "2024-02-01"
     citation_format = "IEEE"
   }
 }
@@ -98,12 +98,12 @@ resource "openwebui_knowledge" "public_docs" {
   access_control = "public"
 
   data = {
-    category     = "api-documentation"
-    version      = "2.0"
-    status       = "published"
-    target       = "external-developers"
-    format       = "openapi"
-    base_url     = "api.example.com/v2"
+    category = "api-documentation"
+    version  = "2.0"
+    status   = "published"
+    target   = "external-developers"
+    format   = "openapi"
+    base_url = "api.example.com/v2"
   }
 }
 
@@ -114,13 +114,13 @@ resource "openwebui_knowledge" "training" {
   access_control = "private"
 
   data = {
-    category     = "training"
-    department   = "hr"
-    type         = "onboarding"
-    format       = "mixed"
-    required     = "true"
-    validity     = "2024"
-    compliance   = "required"
+    category   = "training"
+    department = "hr"
+    type       = "onboarding"
+    format     = "mixed"
+    required   = "true"
+    validity   = "2024"
+    compliance = "required"
   }
 }
 
@@ -131,7 +131,7 @@ resource "openwebui_model" "documentation_assistant" {
   is_active     = true
 
   params {
-    system = <<-EOT
+    system      = <<-EOT
       You are a documentation specialist. Help users understand and navigate
       technical documentation, research papers, and training materials.
       Provide clear, concise explanations and relevant examples.
@@ -161,10 +161,10 @@ data "openwebui_knowledge" "research" {
 # Outputs for verification and reference
 output "knowledge_base_ids" {
   value = {
-    tech_docs      = openwebui_knowledge.tech_docs.id
-    research       = openwebui_knowledge.research_papers.id
-    public_docs    = openwebui_knowledge.public_docs.id
-    training       = openwebui_knowledge.training.id
+    tech_docs   = openwebui_knowledge.tech_docs.id
+    research    = openwebui_knowledge.research_papers.id
+    public_docs = openwebui_knowledge.public_docs.id
+    training    = openwebui_knowledge.training.id
   }
 }
 
@@ -177,7 +177,7 @@ output "knowledge_metadata" {
 
 output "access_control" {
   value = {
-    developers_group = openwebui_group.developers.id
+    developers_group  = openwebui_group.developers.id
     researchers_group = openwebui_group.researchers.id
   }
 }
