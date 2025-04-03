@@ -23,7 +23,7 @@ This Terraform provider enables infrastructure-as-code management of OpenWebUI r
    terraform {
      required_providers {
        openwebui = {
-         source = "ncecere/openwebui"
+         source = "coalition-sre/openwebui"
        }
      }
    }
@@ -46,13 +46,13 @@ This Terraform provider enables infrastructure-as-code management of OpenWebUI r
 
 ### From Terraform Registry
 
-The provider is available on the [Terraform Registry](https://registry.terraform.io/providers/ncecere/openwebui/latest). Terraform will automatically download the provider when you run `terraform init`.
+The provider is available on the [Terraform Registry](https://registry.terraform.io/providers/coalition-sre/openwebui/latest). Terraform will automatically download the provider when you run `terraform init`.
 
 ### Local Development Build
 
 1. Clone the repository
    ```shell
-   git clone git@github.com:ncecere/terraform-provider-openwebui.git
+   git clone git@github.com:coalition-sre/terraform-provider-openwebui.git
    cd terraform-provider-openwebui
    ```
 

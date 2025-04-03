@@ -10,10 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client/groups"
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client/knowledge"
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client/models"
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client/users"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/groups"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/knowledge"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/models"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/users"
 )
 
 var (

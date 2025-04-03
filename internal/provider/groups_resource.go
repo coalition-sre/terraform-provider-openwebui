@@ -12,8 +12,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client"
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client/groups"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/groups"
 )
 
 var (

@@ -3,9 +3,9 @@ package client
 import (
 	"fmt"
 
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client/groups"
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client/knowledge"
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client/models"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/groups"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/knowledge"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/models"
 )
 
 // OpenWebUIClient implements the Client interface

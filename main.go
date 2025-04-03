@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider"
 )
 
 var (
@@ -22,7 +22,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "registry.terraform.io/ncecere/openwebui",
+		Address: "registry.terraform.io/coalition-sre/openwebui",
 		Debug:   debug,
 	}
 

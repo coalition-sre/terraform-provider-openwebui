@@ -1,8 +1,8 @@
 package client
 
 import (
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client/knowledge"
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client/models"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/knowledge"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/models"
 )
 
 // Client interface defines all client operations

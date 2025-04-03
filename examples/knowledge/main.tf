@@ -2,7 +2,7 @@
 terraform {
   required_providers {
     openwebui = {
-      source = "ncecere/openwebui"
+      source = "coalition-sre/openwebui"
     }
   }
 }

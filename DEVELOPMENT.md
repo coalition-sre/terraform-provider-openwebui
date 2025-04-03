@@ -31,7 +31,7 @@ This guide provides detailed instructions for developing and testing the OpenWeb
 
 1. **Clone the Repository**
    ```bash
-   git clone git@github.com:ncecere/terraform-provider-openwebui.git
+   git clone git@github.com:coalition-sre/terraform-provider-openwebui.git
    cd terraform-provider-openwebui
    ```
 

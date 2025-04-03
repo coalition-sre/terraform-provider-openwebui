@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces
