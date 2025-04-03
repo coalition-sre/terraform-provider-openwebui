@@ -8,7 +8,7 @@ The OpenWebUI provider allows you to manage OpenWebUI resources through Terrafor
 terraform {
   required_providers {
     openwebui = {
-      source = "ncecere/openwebui"
+      source = "coalition-sre/openwebui"
     }
   }
 }

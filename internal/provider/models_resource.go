@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/ncecere/terraform-provider-openwebui/internal/provider/client/models"
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/models"
 )
 
 var (
