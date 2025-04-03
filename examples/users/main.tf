@@ -1,3 +1,5 @@
+# Copyright (c) HashiCorp, Inc.
+
 terraform {
   required_providers {
     openwebui = {
@@ -8,13 +10,13 @@ terraform {
 
 # Configure the OpenWebUI Provider
 provider "openwebui" {
-  endpoint = "https://chat.example.com"  # Your OpenWebUI endpoint
+  endpoint = "https://chat.example.com" # Your OpenWebUI endpoint
   token    = "your-api-token"           # Your OpenWebUI API token
 }
 
 # Example: Find user by email
 data "openwebui_user" "example" {
-  email = "user@example.com"  # You can use email to find a user
+  email = "user@example.com" # You can use email to find a user
   # Or use name = "Example User" to find by name
   # Or use id = "user-id-123" to find by ID
   # Note: Only use one of: email, name, or id

@@ -1,3 +1,6 @@
+// Copyright (c) Coalition, Inc
+// SPDX-License-Identifier: MIT
+
 package models
 
 import (

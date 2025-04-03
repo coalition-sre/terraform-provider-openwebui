@@ -1,3 +1,6 @@
+// Copyright (c) Coalition, Inc
+// SPDX-License-Identifier: MIT
+
 package provider
 
 import (
@@ -7,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/models"
 )
 
