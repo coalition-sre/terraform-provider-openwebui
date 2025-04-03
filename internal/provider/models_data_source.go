@@ -36,7 +36,7 @@ func (d *ModelDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Description: "The ID of the model.",
-				Computed:    true,
+				Required:    true,
 			},
 			"user_id": schema.StringAttribute{
 				Description: "The ID of the user who created the model.",
@@ -48,7 +48,7 @@ func (d *ModelDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, 
 			},
 			"name": schema.StringAttribute{
 				Description: "The name of the model.",
-				Required:    true,
+				Computed:    true,
 			},
 			"params": schema.SingleNestedAttribute{
 				Description: "Model parameters.",
@@ -240,30 +240,20 @@ func (d *ModelDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 
-	// Get all models
-	modelList, err := d.client.GetModels()
+	// Get specific model
+	foundModel, err := d.client.GetModel(config.ID.ValueString())
 	if err != nil {
-		resp.Diagnostics.AddError("Error reading models", err.Error())
+		resp.Diagnostics.AddError("Error reading model", err.Error())
 		return
 	}
-
-	// Find the model with matching name
-	var foundModel *models.Model
-	for _, model := range modelList {
-		if model.Name.ValueString() == config.Name.ValueString() {
-			foundModel = &model
-			break
-		}
-	}
+	diags = resp.State.Set(ctx, foundModel)
+	resp.Diagnostics.Append(diags...)
 
 	if foundModel == nil {
 		resp.Diagnostics.AddError(
 			"Error reading model",
-			fmt.Sprintf("No model found with name: %s", config.Name.ValueString()),
+			fmt.Sprintf("No model found with name: %s", config.ID.ValueString()),
 		)
 		return
 	}
-
-	diags = resp.State.Set(ctx, foundModel)
-	resp.Diagnostics.Append(diags...)
 }
