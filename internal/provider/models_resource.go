@@ -416,33 +416,41 @@ func (m AccessControlDefaultModifier) PlanModifyObject(ctx context.Context, req 
 	var accessControl types.Object
 	req.Plan.GetAttribute(ctx, path.Root("access_control"), &accessControl)
 
-	if !isPrivate.ValueBool() && !accessControl.IsNull() {
-		resp.Diagnostics.AddError(
-			"Conflict Detected",
-			"access_control cannot be specified when is_private is false",
-		)
+	if !isPrivate.ValueBool() && !(accessControl.IsNull() || accessControl.IsUnknown()) {
+		resp.Diagnostics.AddAttributeError(path.Root("is_private"), "Invalid Value", "is_private must be true when access_control is specified.")
+		resp.Diagnostics.AddAttributeError(path.Root("access_control"), "Invalid Value", "access_control cannot be specified when is_private is false.")
 		return
 	}
 
-	if isPrivate.ValueBool() && accessControl.IsNull() {
+	attributeTypes := map[string]attr.Type{
+		"read":  types.ObjectType{AttrTypes: map[string]attr.Type{"group_ids": types.ListType{ElemType: types.StringType}, "user_ids": types.ListType{ElemType: types.StringType}}},
+		"write": types.ObjectType{AttrTypes: map[string]attr.Type{"group_ids": types.ListType{ElemType: types.StringType}, "user_ids": types.ListType{ElemType: types.StringType}}},
+	}
+
+	if isPrivate.ValueBool() && (accessControl.IsUnknown() || accessControl.IsNull()) {
+		emptyList, listDiags := types.ListValueFrom(context.Background(), types.StringType, []string{})
+
+		resp.Diagnostics.Append(listDiags...)
+
 		readPermissions, readDiags := types.ObjectValue(map[string]attr.Type{"group_ids": types.ListType{ElemType: types.StringType}, "user_ids": types.ListType{ElemType: types.StringType}}, map[string]attr.Value{
-			"group_ids": types.ListNull(types.StringType),
-			"user_ids":  types.ListNull(types.StringType),
+			"group_ids": emptyList,
+			"user_ids":  emptyList,
 		})
 		resp.Diagnostics.Append(readDiags...)
 		writePermissions, writeDiags := types.ObjectValue(map[string]attr.Type{"group_ids": types.ListType{ElemType: types.StringType}, "user_ids": types.ListType{ElemType: types.StringType}}, map[string]attr.Value{
-			"group_ids": types.ListNull(types.StringType),
-			"user_ids":  types.ListNull(types.StringType),
+			"group_ids": emptyList,
+			"user_ids":  emptyList,
 		})
 		resp.Diagnostics.Append(writeDiags...)
-		defaultAccessControl, diags := types.ObjectValue(map[string]attr.Type{
-			"read":  types.ObjectType{AttrTypes: map[string]attr.Type{"group_ids": types.ListType{ElemType: types.StringType}, "user_ids": types.ListType{ElemType: types.StringType}}},
-			"write": types.ObjectType{AttrTypes: map[string]attr.Type{"group_ids": types.ListType{ElemType: types.StringType}, "user_ids": types.ListType{ElemType: types.StringType}}},
-		}, map[string]attr.Value{
+
+		defaultAccessControl, diags := types.ObjectValue(attributeTypes, map[string]attr.Value{
 			"read":  readPermissions,
 			"write": writePermissions,
 		})
 		resp.Diagnostics.Append(diags...)
 		resp.PlanValue = defaultAccessControl
+	}
+	if !isPrivate.ValueBool() {
+		resp.PlanValue = types.ObjectNull(attributeTypes)
 	}
 }
