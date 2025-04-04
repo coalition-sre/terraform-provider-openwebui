@@ -66,6 +66,10 @@ func (d *ModelDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, 
 						Description: "Sampling temperature.",
 						Computed:    true,
 					},
+					"reasoning_effort": schema.StringAttribute{
+						Description: "Reasoning effort level.",
+						Computed:    true,
+					},
 					"top_p": schema.Float64Attribute{
 						Description: "Top-p sampling parameter.",
 						Computed:    true,
@@ -150,6 +154,11 @@ func (d *ModelDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, 
 							},
 						},
 					},
+					"filter_ids": schema.ListAttribute{
+						Description: "List of filter IDs.",
+						Computed:    true,
+						ElementType: types.StringType,
+					},
 				},
 			},
 			"access_control": schema.SingleNestedAttribute{
@@ -200,6 +209,10 @@ func (d *ModelDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, 
 			},
 			"updated_at": schema.Int64Attribute{
 				Description: "Timestamp when the model was last updated.",
+				Computed:    true,
+			},
+			"is_private": schema.BoolAttribute{
+				Description: "Whether the model is private.",
 				Computed:    true,
 			},
 		},

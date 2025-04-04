@@ -105,10 +105,13 @@ func (c *Client) CreateModel(model *Model) (*Model, error) {
 			apiModel.Params.System = model.Params.System.ValueString()
 		}
 		if !model.Params.StreamResponse.IsNull() {
-			apiModel.Params.StreamResponse = model.Params.StreamResponse.ValueBool()
+			apiModel.Params.StreamResponse = model.Params.StreamResponse.ValueBoolPointer()
 		}
 		if !model.Params.Temperature.IsNull() {
 			apiModel.Params.Temperature = model.Params.Temperature.ValueFloat64()
+		}
+		if !model.Params.ReasoningEffort.IsNull() {
+			apiModel.Params.ReasoningEffort = model.Params.ReasoningEffort.ValueString()
 		}
 		if !model.Params.TopP.IsNull() {
 			apiModel.Params.TopP = model.Params.TopP.ValueFloat64()
@@ -167,6 +170,15 @@ func (c *Client) CreateModel(model *Model) (*Model, error) {
 					apiModel.Meta.Tags[i] = APITag{
 						Name: tag.Name.ValueString(),
 					}
+				}
+			}
+		}
+
+		if len(model.Meta.FilterIDs) > 0 {
+			apiModel.Meta.FilterIDs = make([]string, len(model.Meta.FilterIDs))
+			for i, id := range model.Meta.FilterIDs {
+				if !id.IsNull() {
+					apiModel.Meta.FilterIDs[i] = id.ValueString()
 				}
 			}
 		}
@@ -261,10 +273,13 @@ func (c *Client) UpdateModel(id string, model *Model) (*Model, error) {
 			apiModel.Params.System = model.Params.System.ValueString()
 		}
 		if !model.Params.StreamResponse.IsNull() {
-			apiModel.Params.StreamResponse = model.Params.StreamResponse.ValueBool()
+			apiModel.Params.StreamResponse = model.Params.StreamResponse.ValueBoolPointer()
 		}
 		if !model.Params.Temperature.IsNull() {
 			apiModel.Params.Temperature = model.Params.Temperature.ValueFloat64()
+		}
+		if !model.Params.ReasoningEffort.IsNull() {
+			apiModel.Params.ReasoningEffort = model.Params.ReasoningEffort.ValueString()
 		}
 		if !model.Params.TopP.IsNull() {
 			apiModel.Params.TopP = model.Params.TopP.ValueFloat64()
@@ -323,6 +338,15 @@ func (c *Client) UpdateModel(id string, model *Model) (*Model, error) {
 					apiModel.Meta.Tags[i] = APITag{
 						Name: tag.Name.ValueString(),
 					}
+				}
+			}
+		}
+
+		if len(model.Meta.FilterIDs) > 0 {
+			apiModel.Meta.FilterIDs = make([]string, len(model.Meta.FilterIDs))
+			for i, id := range model.Meta.FilterIDs {
+				if !id.IsNull() {
+					apiModel.Meta.FilterIDs[i] = id.ValueString()
 				}
 			}
 		}

@@ -7,12 +7,18 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/models"
 )
 
@@ -81,7 +87,39 @@ func (r *ModelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 			},
 			"params": schema.SingleNestedAttribute{
 				Description: "Model parameters.",
+				Computed:    true,
 				Optional:    true,
+				Default: objectdefault.StaticValue(types.ObjectValueMust(map[string]attr.Type{
+					"system":            types.StringType,
+					"stream_response":   types.BoolType,
+					"temperature":       types.Float64Type,
+					"reasoning_effort":  types.StringType,
+					"top_p":             types.Float64Type,
+					"top_k":             types.Int64Type,
+					"min_p":             types.Float64Type,
+					"max_tokens":        types.Int64Type,
+					"seed":              types.Int64Type,
+					"frequency_penalty": types.Int64Type,
+					"repeat_last_n":     types.Int64Type,
+					"num_ctx":           types.Int64Type,
+					"num_batch":         types.Int64Type,
+					"num_keep":          types.Int64Type,
+				}, map[string]attr.Value{
+					"system":            types.StringNull(),
+					"stream_response":   types.BoolNull(),
+					"temperature":       types.Float64Null(),
+					"reasoning_effort":  types.StringNull(),
+					"top_p":             types.Float64Null(),
+					"top_k":             types.Int64Null(),
+					"min_p":             types.Float64Null(),
+					"max_tokens":        types.Int64Null(),
+					"seed":              types.Int64Null(),
+					"frequency_penalty": types.Int64Null(),
+					"repeat_last_n":     types.Int64Null(),
+					"num_ctx":           types.Int64Null(),
+					"num_batch":         types.Int64Null(),
+					"num_keep":          types.Int64Null(),
+				})),
 				Attributes: map[string]schema.Attribute{
 					"system": schema.StringAttribute{
 						Description: "System prompt for the model.",
@@ -94,6 +132,13 @@ func (r *ModelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 					"temperature": schema.Float64Attribute{
 						Description: "Sampling temperature.",
 						Optional:    true,
+					},
+					"reasoning_effort": schema.StringAttribute{
+						Description: "Reasoning effort level. If set, must be one of: 'low', 'medium', 'high'.",
+						Optional:    true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("low", "medium", "high"),
+						},
 					},
 					"top_p": schema.Float64Attribute{
 						Description: "Top-p sampling parameter.",
@@ -144,6 +189,8 @@ func (r *ModelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 					"profile_image_url": schema.StringAttribute{
 						Description: "URL for the model's profile image.",
 						Optional:    true,
+						Computed:    true,
+						Default:     stringdefault.StaticString("/static/favicon.png"),
 					},
 					"description": schema.StringAttribute{
 						Description: "Description of the model.",
@@ -179,11 +226,18 @@ func (r *ModelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 							},
 						},
 					},
+					"filter_ids": schema.SetAttribute{
+						Description: "List of filter IDs.",
+						Optional:    true,
+						ElementType: types.StringType,
+					},
 				},
 			},
 			"access_control": schema.SingleNestedAttribute{
-				Description: "Access control settings.",
-				Optional:    true,
+				Description:   "Access control settings.",
+				Optional:      true,
+				Computed:      true,
+				PlanModifiers: []planmodifier.Object{AccessControlDefaultModifier{}},
 				Attributes: map[string]schema.Attribute{
 					"read": schema.SingleNestedAttribute{
 						Description: "Read access settings.",
@@ -222,6 +276,8 @@ func (r *ModelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 			"is_active": schema.BoolAttribute{
 				Description: "Whether the model is active.",
 				Optional:    true,
+				Computed:    true,
+				Default:     booldefault.StaticBool(false),
 			},
 			"created_at": schema.Int64Attribute{
 				Description: "Timestamp when the model was created.",
@@ -230,6 +286,13 @@ func (r *ModelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 			"updated_at": schema.Int64Attribute{
 				Description: "Timestamp when the model was last updated.",
 				Computed:    true,
+			},
+			"is_private": schema.BoolAttribute{
+				Description:         "Whether the model is private.",
+				MarkdownDescription: "Whether the model is private. `access_control` must be unset when this is set to `false`.",
+				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(false),
 			},
 		},
 	}
@@ -332,4 +395,54 @@ func (r *ModelResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 
 func (r *ModelResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+
+// AccessControlDefaultModifier is a custom plan modifier for the access_control attribute.
+type AccessControlDefaultModifier struct{}
+
+func (m AccessControlDefaultModifier) Description(ctx context.Context) string {
+	return "implement me description"
+}
+
+func (m AccessControlDefaultModifier) MarkdownDescription(ctx context.Context) string {
+	return "implement me md description"
+}
+
+// PlanModifyObject implements the plan modification logic.
+func (m AccessControlDefaultModifier) PlanModifyObject(ctx context.Context, req planmodifier.ObjectRequest, resp *planmodifier.ObjectResponse) {
+	var isPrivate types.Bool
+	req.Plan.GetAttribute(ctx, path.Root("is_private"), &isPrivate)
+
+	var accessControl types.Object
+	req.Plan.GetAttribute(ctx, path.Root("access_control"), &accessControl)
+
+	if !isPrivate.ValueBool() && !accessControl.IsNull() {
+		resp.Diagnostics.AddError(
+			"Conflict Detected",
+			"access_control cannot be specified when is_private is false",
+		)
+		return
+	}
+
+	if isPrivate.ValueBool() && accessControl.IsNull() {
+		readPermissions, readDiags := types.ObjectValue(map[string]attr.Type{"group_ids": types.ListType{ElemType: types.StringType}, "user_ids": types.ListType{ElemType: types.StringType}}, map[string]attr.Value{
+			"group_ids": types.ListNull(types.StringType),
+			"user_ids":  types.ListNull(types.StringType),
+		})
+		resp.Diagnostics.Append(readDiags...)
+		writePermissions, writeDiags := types.ObjectValue(map[string]attr.Type{"group_ids": types.ListType{ElemType: types.StringType}, "user_ids": types.ListType{ElemType: types.StringType}}, map[string]attr.Value{
+			"group_ids": types.ListNull(types.StringType),
+			"user_ids":  types.ListNull(types.StringType),
+		})
+		resp.Diagnostics.Append(writeDiags...)
+		defaultAccessControl, diags := types.ObjectValue(map[string]attr.Type{
+			"read":  types.ObjectType{AttrTypes: map[string]attr.Type{"group_ids": types.ListType{ElemType: types.StringType}, "user_ids": types.ListType{ElemType: types.StringType}}},
+			"write": types.ObjectType{AttrTypes: map[string]attr.Type{"group_ids": types.ListType{ElemType: types.StringType}, "user_ids": types.ListType{ElemType: types.StringType}}},
+		}, map[string]attr.Value{
+			"read":  readPermissions,
+			"write": writePermissions,
+		})
+		resp.Diagnostics.Append(diags...)
+		resp.PlanValue = defaultAccessControl
+	}
 }
