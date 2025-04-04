@@ -18,6 +18,7 @@ Manages a model in OpenWebUI.
 ### Required
 
 - `base_model_id` (String) The ID of the base model.
+- `id` (String) The ID of the model.
 - `name` (String) The name of the model.
 
 ### Optional
@@ -30,7 +31,6 @@ Manages a model in OpenWebUI.
 ### Read-Only
 
 - `created_at` (Number) Timestamp when the model was created.
-- `id` (String) The ID of the model.
 - `updated_at` (Number) Timestamp when the model was last updated.
 - `user_id` (String) The ID of the user who created the model.
 

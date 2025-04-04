@@ -65,10 +65,7 @@ func (r *ModelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Description: "The ID of the model.",
-				Computed:    true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
+				Required:    true,
 			},
 			"user_id": schema.StringAttribute{
 				Description: "The ID of the user who created the model.",

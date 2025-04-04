@@ -10,8 +10,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-
-	"github.com/google/uuid"
 )
 
 // Client implements the models operations
@@ -92,12 +90,9 @@ func (c *Client) GetModels() ([]Model, error) {
 }
 
 func (c *Client) CreateModel(model *Model) (*Model, error) {
-	// Generate a new UUID for the model
-	modelID := uuid.New().String()
-
 	// Convert to API model
 	apiModel := &APIModel{
-		ID:          modelID,
+		ID:          model.ID.ValueString(),
 		BaseModelID: model.BaseModelID.ValueString(),
 		Name:        model.Name.ValueString(),
 		IsActive:    model.IsActive.ValueBool(),
@@ -245,11 +240,6 @@ func (c *Client) CreateModel(model *Model) (*Model, error) {
 	var createdAPIModel APIModel
 	if err := json.Unmarshal(bodyBytes, &createdAPIModel); err != nil {
 		return nil, fmt.Errorf("error decoding response: %v", err)
-	}
-
-	// Ensure the ID is set in the response
-	if createdAPIModel.ID == "" {
-		createdAPIModel.ID = modelID
 	}
 
 	return APIToModel(&createdAPIModel), nil
