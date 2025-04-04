@@ -18,19 +18,20 @@ Manages a model in OpenWebUI.
 ### Required
 
 - `base_model_id` (String) The ID of the base model.
+- `id` (String) The ID of the model.
 - `name` (String) The name of the model.
 
 ### Optional
 
 - `access_control` (Attributes) Access control settings. (see [below for nested schema](#nestedatt--access_control))
 - `is_active` (Boolean) Whether the model is active.
+- `is_private` (Boolean) Whether the model is private. `access_control` must be unset when this is set to `false`.
 - `meta` (Attributes) Model metadata. (see [below for nested schema](#nestedatt--meta))
 - `params` (Attributes) Model parameters. (see [below for nested schema](#nestedatt--params))
 
 ### Read-Only
 
 - `created_at` (Number) Timestamp when the model was created.
-- `id` (String) The ID of the model.
 - `updated_at` (Number) Timestamp when the model was last updated.
 - `user_id` (String) The ID of the user who created the model.
 
@@ -68,6 +69,7 @@ Optional:
 
 - `capabilities` (Attributes) Model capabilities. (see [below for nested schema](#nestedatt--meta--capabilities))
 - `description` (String) Description of the model.
+- `filter_ids` (Set of String) List of filter IDs.
 - `profile_image_url` (String) URL for the model's profile image.
 - `tags` (Attributes List) List of tags. (see [below for nested schema](#nestedatt--meta--tags))
 
@@ -101,6 +103,7 @@ Optional:
 - `num_batch` (Number) Batch size for processing.
 - `num_ctx` (Number) Context window size.
 - `num_keep` (Number) Number of tokens to keep from prompt.
+- `reasoning_effort` (String) Reasoning effort level. If set, must be one of: 'low', 'medium', 'high'.
 - `repeat_last_n` (Number) Number of tokens to consider for repetition penalty.
 - `seed` (Number) Random seed for reproducibility.
 - `stream_response` (Boolean) Whether to stream responses.

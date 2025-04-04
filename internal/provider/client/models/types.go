@@ -17,6 +17,7 @@ type Model struct {
 	Meta          *ModelMeta     `tfsdk:"meta"`
 	AccessControl *AccessControl `tfsdk:"access_control"`
 	IsActive      types.Bool     `tfsdk:"is_active"`
+	IsPrivate     types.Bool     `tfsdk:"is_private"`
 	UpdatedAt     types.Int64    `tfsdk:"updated_at"`
 	CreatedAt     types.Int64    `tfsdk:"created_at"`
 }
@@ -40,6 +41,7 @@ type ModelParams struct {
 	StreamResponse   types.Bool    `tfsdk:"stream_response"`
 	Seed             types.Int64   `tfsdk:"seed"`
 	Temperature      types.Float64 `tfsdk:"temperature"`
+	ReasoningEffort  types.String  `tfsdk:"reasoning_effort"`
 	TopK             types.Int64   `tfsdk:"top_k"`
 	TopP             types.Float64 `tfsdk:"top_p"`
 	MinP             types.Float64 `tfsdk:"min_p"`
@@ -53,9 +55,10 @@ type ModelParams struct {
 
 type APIModelParams struct {
 	System           string  `json:"system,omitempty"`
-	StreamResponse   bool    `json:"stream_response,omitempty"`
+	StreamResponse   *bool   `json:"stream_response,omitempty"`
 	Seed             int64   `json:"seed,omitempty"`
 	Temperature      float64 `json:"temperature,omitempty"`
+	ReasoningEffort  string  `json:"reasoning_effort,omitempty"`
 	TopK             int64   `json:"top_k,omitempty"`
 	TopP             float64 `json:"top_p,omitempty"`
 	MinP             float64 `json:"min_p,omitempty"`
@@ -72,6 +75,7 @@ type ModelMeta struct {
 	Description     types.String       `tfsdk:"description"`
 	Capabilities    *ModelCapabilities `tfsdk:"capabilities"`
 	Tags            []Tag              `tfsdk:"tags"`
+	FilterIDs       []types.String     `tfsdk:"filter_ids"`
 }
 
 type APIModelMeta struct {
@@ -79,6 +83,7 @@ type APIModelMeta struct {
 	Description     string                `json:"description,omitempty"`
 	Capabilities    *APIModelCapabilities `json:"capabilities,omitempty"`
 	Tags            []APITag              `json:"tags,omitempty"`
+	FilterIDs       []string              `json:"filterIds,omitempty"`
 }
 
 type ModelCapabilities struct {
@@ -138,9 +143,14 @@ func APIToModel(apiModel *APIModel) *Model {
 		if apiModel.Params.System != "" {
 			model.Params.System = types.StringValue(apiModel.Params.System)
 		}
-		model.Params.StreamResponse = types.BoolValue(apiModel.Params.StreamResponse)
+		if apiModel.Params.StreamResponse != nil {
+			model.Params.StreamResponse = types.BoolValue(*apiModel.Params.StreamResponse)
+		}
 		if apiModel.Params.Temperature != 0 {
 			model.Params.Temperature = types.Float64Value(apiModel.Params.Temperature)
+		}
+		if apiModel.Params.ReasoningEffort != "" {
+			model.Params.ReasoningEffort = types.StringValue(apiModel.Params.ReasoningEffort)
 		}
 		if apiModel.Params.TopP != 0 {
 			model.Params.TopP = types.Float64Value(apiModel.Params.TopP)
@@ -199,6 +209,13 @@ func APIToModel(apiModel *APIModel) *Model {
 				}
 			}
 		}
+
+		if len(apiModel.Meta.FilterIDs) > 0 {
+			model.Meta.FilterIDs = make([]types.String, len(apiModel.Meta.FilterIDs))
+			for i, id := range apiModel.Meta.FilterIDs {
+				model.Meta.FilterIDs[i] = types.StringValue(id)
+			}
+		}
 	}
 
 	if apiModel.AccessControl != nil {
@@ -227,6 +244,9 @@ func APIToModel(apiModel *APIModel) *Model {
 				model.AccessControl.Write.UserIDs[i] = types.StringValue(id)
 			}
 		}
+		model.IsPrivate = types.BoolValue(true)
+	} else {
+		model.IsPrivate = types.BoolValue(false)
 	}
 
 	return model

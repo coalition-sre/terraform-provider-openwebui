@@ -25,6 +25,7 @@ Fetches a model by name.
 - `base_model_id` (String) The ID of the base model.
 - `created_at` (Number) Timestamp when the model was created.
 - `is_active` (Boolean) Whether the model is active.
+- `is_private` (Boolean) Whether the model is private.
 - `meta` (Attributes) Model metadata. (see [below for nested schema](#nestedatt--meta))
 - `name` (String) The name of the model.
 - `params` (Attributes) Model parameters. (see [below for nested schema](#nestedatt--params))
@@ -65,6 +66,7 @@ Read-Only:
 
 - `capabilities` (Attributes) Model capabilities. (see [below for nested schema](#nestedatt--meta--capabilities))
 - `description` (String) Description of the model.
+- `filter_ids` (List of String) List of filter IDs.
 - `profile_image_url` (String) URL for the model's profile image.
 - `tags` (Attributes List) List of tags. (see [below for nested schema](#nestedatt--meta--tags))
 
@@ -98,6 +100,7 @@ Read-Only:
 - `num_batch` (Number) Batch size for processing.
 - `num_ctx` (Number) Context window size.
 - `num_keep` (Number) Number of tokens to keep from prompt.
+- `reasoning_effort` (String) Reasoning effort level.
 - `repeat_last_n` (Number) Number of tokens to consider for repetition penalty.
 - `seed` (Number) Random seed for reproducibility.
 - `stream_response` (Boolean) Whether to stream responses.
