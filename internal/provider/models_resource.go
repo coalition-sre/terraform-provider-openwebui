@@ -401,11 +401,11 @@ func (r *ModelResource) ImportState(ctx context.Context, req resource.ImportStat
 type AccessControlDefaultModifier struct{}
 
 func (m AccessControlDefaultModifier) Description(ctx context.Context) string {
-	return "implement me description"
+	return "Ensures access_control is set to default values when is_private is true."
 }
 
 func (m AccessControlDefaultModifier) MarkdownDescription(ctx context.Context) string {
-	return "implement me md description"
+	return "Ensures access_control is set to default values when is_private is true."
 }
 
 // PlanModifyObject implements the plan modification logic.
