@@ -98,6 +98,7 @@ Required:
 Optional:
 
 - `frequency_penalty` (Number) Frequency penalty.
+- `function_calling` (String) Enables function calling support; set to 'native' for API native support, otherwise omit.
 - `max_tokens` (Number) Maximum number of tokens to generate.
 - `min_p` (Number) Minimum probability threshold.
 - `num_batch` (Number) Batch size for processing.

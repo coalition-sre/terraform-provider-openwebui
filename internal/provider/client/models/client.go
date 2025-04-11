@@ -143,6 +143,9 @@ func (c *Client) CreateModel(model *Model) (*Model, error) {
 		if !model.Params.NumKeep.IsNull() {
 			apiModel.Params.NumKeep = model.Params.NumKeep.ValueInt64()
 		}
+		if !model.Params.FunctionCalling.IsNull() {
+			apiModel.Params.FunctionCalling = model.Params.FunctionCalling.ValueStringPointer()
+		}
 	}
 
 	// Handle Meta
@@ -310,6 +313,9 @@ func (c *Client) UpdateModel(id string, model *Model) (*Model, error) {
 		}
 		if !model.Params.NumKeep.IsNull() {
 			apiModel.Params.NumKeep = model.Params.NumKeep.ValueInt64()
+		}
+		if !model.Params.FunctionCalling.IsNull() {
+			apiModel.Params.FunctionCalling = model.Params.FunctionCalling.ValueStringPointer()
 		}
 	}
 

@@ -104,6 +104,7 @@ func (r *ModelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 					"num_ctx":           types.Int64Type,
 					"num_batch":         types.Int64Type,
 					"num_keep":          types.Int64Type,
+					"function_calling":  types.StringType,
 				}, map[string]attr.Value{
 					"system":            types.StringNull(),
 					"stream_response":   types.BoolNull(),
@@ -119,6 +120,7 @@ func (r *ModelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 					"num_ctx":           types.Int64Null(),
 					"num_batch":         types.Int64Null(),
 					"num_keep":          types.Int64Null(),
+					"function_calling":  types.StringNull(),
 				})),
 				Attributes: map[string]schema.Attribute{
 					"system": schema.StringAttribute{
@@ -179,6 +181,13 @@ func (r *ModelResource) Schema(_ context.Context, _ resource.SchemaRequest, resp
 					"num_keep": schema.Int64Attribute{
 						Description: "Number of tokens to keep from prompt.",
 						Optional:    true,
+					},
+					"function_calling": schema.StringAttribute{
+						Description: "Enables function calling support; set to 'native' for API native support, otherwise omit.",
+						Optional:    true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("native"),
+						},
 					},
 				},
 			},
