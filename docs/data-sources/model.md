@@ -95,6 +95,7 @@ Read-Only:
 Read-Only:
 
 - `frequency_penalty` (Number) Frequency penalty.
+- `function_calling` (String) Type of function calling support (set to 'native' if enabled).
 - `max_tokens` (Number) Maximum number of tokens to generate.
 - `min_p` (Number) Minimum probability threshold.
 - `num_batch` (Number) Batch size for processing.

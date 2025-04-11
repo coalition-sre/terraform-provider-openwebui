@@ -7,8 +7,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/models"
@@ -109,6 +111,13 @@ func (d *ModelDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, 
 					"num_keep": schema.Int64Attribute{
 						Description: "Number of tokens to keep from prompt.",
 						Computed:    true,
+					},
+					"function_calling": schema.StringAttribute{
+						Description: "Type of function calling support (set to 'native' if enabled).",
+						Computed:    true,
+						Validators: []validator.String{
+							stringvalidator.OneOf("native"),
+						},
 					},
 				},
 			},

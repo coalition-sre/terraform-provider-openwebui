@@ -51,8 +51,13 @@ type ModelParams struct {
 	NumBatch         types.Int64   `tfsdk:"num_batch"`
 	NumKeep          types.Int64   `tfsdk:"num_keep"`
 	MaxTokens        types.Int64   `tfsdk:"max_tokens"`
+	FunctionCalling  types.String  `tfsdk:"function_calling"`
 }
 
+// APIModelParams represents the API model parameters
+// FunctionCalling is a pointer so that it is omitted when not set
+// The API expects the value to be set to "native" if enabled
+// or completely omitted if unset.
 type APIModelParams struct {
 	System           string  `json:"system,omitempty"`
 	StreamResponse   *bool   `json:"stream_response,omitempty"`
@@ -68,8 +73,10 @@ type APIModelParams struct {
 	NumBatch         int64   `json:"num_batch,omitempty"`
 	NumKeep          int64   `json:"num_keep,omitempty"`
 	MaxTokens        int64   `json:"max_tokens,omitempty"`
+	FunctionCalling  *string `json:"function_calling,omitempty"`
 }
 
+// ModelMeta holds model metadata
 type ModelMeta struct {
 	ProfileImageURL types.String       `tfsdk:"profile_image_url"`
 	Description     types.String       `tfsdk:"description"`
@@ -181,6 +188,9 @@ func APIToModel(apiModel *APIModel) *Model {
 		}
 		if apiModel.Params.NumKeep != 0 {
 			model.Params.NumKeep = types.Int64Value(apiModel.Params.NumKeep)
+		}
+		if apiModel.Params.FunctionCalling != nil && *apiModel.Params.FunctionCalling != "" {
+			model.Params.FunctionCalling = types.StringValue(*apiModel.Params.FunctionCalling)
 		}
 	}
 
