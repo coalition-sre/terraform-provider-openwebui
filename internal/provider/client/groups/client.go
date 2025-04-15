@@ -29,7 +29,7 @@ func (c *Client) Create(group *Group) (*Group, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/groups/create", c.BaseURL), bytes.NewBuffer(body))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/groups/create", c.BaseURL), bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *Client) Create(group *Group) (*Group, error) {
 }
 
 func (c *Client) Get(id string) (*Group, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/groups/id/%s", c.BaseURL, id), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/groups/id/%s", c.BaseURL, id), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func (c *Client) Update(id string, group *Group) (*Group, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/groups/id/%s/update", c.BaseURL, id), bytes.NewBuffer(body))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/groups/id/%s/update", c.BaseURL, id), bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +117,7 @@ func (c *Client) Update(id string, group *Group) (*Group, error) {
 }
 
 func (c *Client) Delete(id string) error {
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/groups/id/%s/delete", c.BaseURL, id), nil)
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/groups/id/%s/delete", c.BaseURL, id), nil)
 	if err != nil {
 		return err
 	}

@@ -13,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client"
+
 	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/knowledge"
 )
 
@@ -27,7 +27,7 @@ func NewKnowledgeResource() resource.Resource {
 
 // KnowledgeResource defines the resource implementation.
 type KnowledgeResource struct {
-	client *client.OpenWebUIClient
+	client *knowledge.Client
 }
 
 // KnowledgeResourceModel describes the resource data model.
@@ -87,11 +87,20 @@ func (r *KnowledgeResource) Configure(ctx context.Context, req resource.Configur
 		return
 	}
 
-	client, ok := req.ProviderData.(*client.OpenWebUIClient)
+	clients, ok := req.ProviderData.(map[string]interface{})
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
-			fmt.Sprintf("Expected *client.OpenWebUIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected map[string]interface{}, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+		)
+		return
+	}
+
+	client, ok := clients["knowledge"].(*knowledge.Client)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Unexpected Resource Configure Type",
+			fmt.Sprintf("Expected *knowledge.Client, got: %T. Please report this issue to the provider developers.", clients["knowledge"]),
 		)
 		return
 	}
