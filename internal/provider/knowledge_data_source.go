@@ -10,7 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client"
+
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/knowledge"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces
@@ -22,7 +23,7 @@ func NewKnowledgeDataSource() datasource.DataSource {
 
 // KnowledgeDataSource defines the data source implementation.
 type KnowledgeDataSource struct {
-	client *client.OpenWebUIClient
+	client *knowledge.Client
 }
 
 // KnowledgeDataSourceModel describes the data source data model.
@@ -90,11 +91,20 @@ func (d *KnowledgeDataSource) Configure(ctx context.Context, req datasource.Conf
 		return
 	}
 
-	client, ok := req.ProviderData.(*client.OpenWebUIClient)
+	clients, ok := req.ProviderData.(map[string]interface{})
 	if !ok {
 		resp.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
-			fmt.Sprintf("Expected *client.OpenWebUIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			"Unexpected Resource Configure Type",
+			fmt.Sprintf("Expected map[string]interface{}, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+		)
+		return
+	}
+
+	client, ok := clients["knowledge"].(*knowledge.Client)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Unexpected Resource Configure Type",
+			fmt.Sprintf("Expected *knowledge.Client, got: %T. Please report this issue to the provider developers.", clients["knowledge"]),
 		)
 		return
 	}

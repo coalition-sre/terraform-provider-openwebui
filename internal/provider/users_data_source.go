@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
 	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/users"
 )
 
@@ -18,18 +19,17 @@ var (
 )
 
 type UserDataSourceModel struct {
-	ID              types.String    `tfsdk:"id"`
-	Name            types.String    `tfsdk:"name"`
-	Email           types.String    `tfsdk:"email"`
-	Role            types.String    `tfsdk:"role"`
-	ProfileImageURL types.String    `tfsdk:"profile_image_url"`
-	LastActiveAt    types.Int64     `tfsdk:"last_active_at"`
-	UpdatedAt       types.Int64     `tfsdk:"updated_at"`
-	CreatedAt       types.Int64     `tfsdk:"created_at"`
-	APIKey          types.String    `tfsdk:"api_key"`
-	Settings        *users.Settings `tfsdk:"settings"`
-	Info            types.Map       `tfsdk:"info"`
-	OAuthSub        types.String    `tfsdk:"oauth_sub"`
+	ID              types.String `tfsdk:"id"`
+	Name            types.String `tfsdk:"name"`
+	Email           types.String `tfsdk:"email"`
+	Role            types.String `tfsdk:"role"`
+	ProfileImageURL types.String `tfsdk:"profile_image_url"`
+	LastActiveAt    types.Int64  `tfsdk:"last_active_at"`
+	UpdatedAt       types.Int64  `tfsdk:"updated_at"`
+	CreatedAt       types.Int64  `tfsdk:"created_at"`
+	APIKey          types.String `tfsdk:"api_key"`
+	Info            types.Map    `tfsdk:"info"`
+	OAuthSub        types.String `tfsdk:"oauth_sub"`
 }
 
 func NewUserDataSource() datasource.DataSource {
@@ -87,17 +87,6 @@ func (d *UserDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, r
 				Description: "The API key of the user.",
 				Computed:    true,
 				Sensitive:   true,
-			},
-			"settings": schema.SingleNestedAttribute{
-				Description: "User settings.",
-				Computed:    true,
-				Attributes: map[string]schema.Attribute{
-					"ui": schema.MapAttribute{
-						Description: "UI-specific settings.",
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-				},
 			},
 			"info": schema.MapAttribute{
 				Description: "Additional user information.",
@@ -220,7 +209,6 @@ func (d *UserDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	state.UpdatedAt = user.UpdatedAt
 	state.CreatedAt = user.CreatedAt
 	state.APIKey = user.APIKey
-	state.Settings = user.Settings
 
 	// Convert info map to types.Map with string values
 	if user.Info.IsNull() {

@@ -15,7 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client"
+
 	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/groups"
 )
 
@@ -25,7 +25,7 @@ var (
 )
 
 type GroupResource struct {
-	client *client.OpenWebUIClient
+	client *groups.Client
 }
 
 type GroupResourceModel struct {
@@ -101,11 +101,20 @@ func (r *GroupResource) Configure(_ context.Context, req resource.ConfigureReque
 		return
 	}
 
-	client, ok := req.ProviderData.(*client.OpenWebUIClient)
+	clients, ok := req.ProviderData.(map[string]interface{})
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
-			fmt.Sprintf("Expected *client.OpenWebUIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected map[string]interface{}, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+		)
+		return
+	}
+
+	client, ok := clients["groups"].(*groups.Client)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Unexpected Resource Configure Type",
+			fmt.Sprintf("Expected *groups.Client, got: %T. Please report this issue to the provider developers.", clients["groups"]),
 		)
 		return
 	}
@@ -127,7 +136,7 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		Description: plan.Description.ValueString(),
 	}
 
-	createdGroup, err := r.client.Groups.Create(createGroup)
+	createdGroup, err := r.client.Create(createGroup)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating group",
@@ -190,7 +199,7 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	}
 
 	// Update the group with all the information
-	updatedGroup, err := r.client.Groups.Update(createdGroup.ID, updateGroup)
+	updatedGroup, err := r.client.Update(createdGroup.ID, updateGroup)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error updating group",
@@ -213,7 +222,7 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		return
 	}
 
-	group, err := r.client.Groups.Get(state.ID.ValueString())
+	group, err := r.client.Get(state.ID.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading group",
@@ -355,7 +364,7 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		}
 	}
 
-	updatedGroup, err := r.client.Groups.Update(plan.ID.ValueString(), group)
+	updatedGroup, err := r.client.Update(plan.ID.ValueString(), group)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error updating group",
@@ -378,7 +387,7 @@ func (r *GroupResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 		return
 	}
 
-	err := r.client.Groups.Delete(state.ID.ValueString())
+	err := r.client.Delete(state.ID.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting group",

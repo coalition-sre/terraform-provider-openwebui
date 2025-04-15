@@ -11,7 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client"
+
+	"github.com/coalition-sre/terraform-provider-openwebui/internal/provider/client/groups"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces
@@ -23,7 +24,7 @@ func NewGroupDataSource() datasource.DataSource {
 
 // GroupDataSource defines the data source implementation.
 type GroupDataSource struct {
-	client *client.OpenWebUIClient
+	client *groups.Client
 }
 
 // GroupDataSourceModel describes the data source data model.
@@ -104,11 +105,20 @@ func (d *GroupDataSource) Configure(_ context.Context, req datasource.ConfigureR
 		return
 	}
 
-	client, ok := req.ProviderData.(*client.OpenWebUIClient)
+	clients, ok := req.ProviderData.(map[string]interface{})
 	if !ok {
 		resp.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
-			fmt.Sprintf("Expected *client.OpenWebUIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			"Unexpected Resource Configure Type",
+			fmt.Sprintf("Expected map[string]interface{}, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+		)
+		return
+	}
+
+	client, ok := clients["groups"].(*groups.Client)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Unexpected Resource Configure Type",
+			fmt.Sprintf("Expected *groups.Client, got: %T. Please report this issue to the provider developers.", clients["groups"]),
 		)
 		return
 	}
@@ -126,7 +136,7 @@ func (d *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	}
 
 	// Get groups from API
-	groups, err := d.client.Groups.List()
+	groups, err := d.client.List()
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read groups, got error: %s", err))
 		return
