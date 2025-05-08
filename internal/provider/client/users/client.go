@@ -47,13 +47,13 @@ func (c *Client) GetUsers() ([]User, error) {
 		return nil, fmt.Errorf("API returned status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var apiUsers []APIUser
-	if err := json.Unmarshal(bodyBytes, &apiUsers); err != nil {
+	var apiUserList APIUserList
+	if err := json.Unmarshal(bodyBytes, &apiUserList); err != nil {
 		return nil, fmt.Errorf("error decoding response: %v", err)
 	}
 
 	var users []User
-	for _, apiUser := range apiUsers {
+	for _, apiUser := range apiUserList.Users {
 		users = append(users, *APIToUser(&apiUser))
 	}
 

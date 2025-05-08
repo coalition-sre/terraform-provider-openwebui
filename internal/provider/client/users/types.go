@@ -22,6 +22,11 @@ type User struct {
 	OAuthSub        types.String `tfsdk:"oauth_sub"`
 }
 
+type APIUserList struct {
+	Users []APIUser `json:"users"`
+	Total int       `json:"total"`
+}
+
 // APIUser represents the API response model for users
 type APIUser struct {
 	ID              string                 `json:"id"`
