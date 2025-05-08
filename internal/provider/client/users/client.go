@@ -27,7 +27,7 @@ func NewClient(endpoint, token string) *Client {
 
 // GetUsers retrieves a list of users
 func (c *Client) GetUsers() ([]User, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/users/", c.endpoint), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/users/all", c.endpoint), nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %v", err)
 	}
